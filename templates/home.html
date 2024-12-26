@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather & AQI Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Playfair Display', sans-serif;
+            background: #bcbcf5;
+            color: #333;
+            
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            overflow-y: auto; 
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1500px;
+            background-color: #bcbcf5;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            padding: 40px; 
+            margin: 20px;
+            overflow-y: auto; 
+            max-height: calc(100vh - 60px); 
+        } 
+         
+         
+        nav {
+            background-color: #1f1f1f;
+            color: white;
+            padding: 10px 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #ffffff;
+        }
+        
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-links li {
+            display: inline;
+        }
+        
+        .nav-links a {
+            color: #ff6347;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #ff4500; 
+        }
+         
+
+
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: #444;
+            margin-bottom: 20px;
+        } 
+        
+
+        #city-input {
+            padding: 12px;
+            width: 70%;
+            max-width: 400px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #f9f9f9;
+        }
+ 
+        #news-feed a {
+            color: #ff6347; 
+            font-weight: 600; 
+            text-decoration: none;
+        }
+        
+        #news-feed a:hover {
+            color: #ff4500; 
+            text-decoration: underline;
+        }
+        
+        #search-btn {
+            padding: 12px 20px;
+            background-color: #86a8e7;
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #search-btn:hover {
+            background-color: #6c8fe8;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 60px;
+            margin-top: 40px;
+        }
+
+        .card {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            background-color: #f9f9f9;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .card h2 {
+            font-size: 1.5rem;
+            color: #4a4a4a;
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            margin: 10px 0;
+            line-height: 1.6;
+            color: #5a5a5a;
+        }
+
+        a {
+            color: #86a8e7;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        canvas {
+            width: 100% !important;
+            height: auto;
+        }
+
+        .input-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+    </style>
+</head>
+<body> 
+    <nav>
+        <div class="nav-container">
+            <h1 class="logo">Weather & AQI Dashboard</h1>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('carbon_tracker') }}">Carbon Tracker</a></li>
+                <li><a href="{{ url_for('community') }}">Community</a></li>
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header>
+            <div class="input-container">
+                <input type="text" id="city-input" placeholder="Enter city name" />
+                <button id="search-btn">Search</button>
+            </div>
+        </header>
+
+        <div class="grid">
+            <div class="card" id="weather-details">
+                <h2>Weather Details</h2>
+                <p id="weather-info">Enter a city to view weather data.</p>
+            </div>
+
+            <div class="card" id="aqi-details">
+                <h2>AQI Details</h2>
+                <p id="aqi-info">Enter a city to view AQI data.</p>
+            </div>
+
+            <div class="card" id="news-feed">
+                <h2>News Feed</h2>
+                <p id="news-info">Fetching latest news...</p>
+            </div>
+
+            <div class="card">
+                <h2>AQI Chart</h2>
+                <canvas id="aqi-chart"></canvas>
+            </div>
+
+            <div class="card">
+                <h2>Temperature vs Feels Like</h2>
+                <canvas id="temp-bar-chart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const weatherInfo = document.getElementById("weather-info");
+        const aqiInfo = document.getElementById("aqi-info");
+        const newsInfo = document.getElementById("news-info");
+        const searchBtn = document.getElementById("search-btn");
+        const cityInput = document.getElementById("city-input");
+
+        const aqiChartCtx = document.getElementById("aqi-chart").getContext("2d");
+        const tempBarChartCtx = document.getElementById("temp-bar-chart").getContext("2d");
+
+        let aqiChart = new Chart(aqiChartCtx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'AQI',
+                    data: [],
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 2,
+                    fill: false
+                }]
+            },
+        });
+
+        let tempBarChart = new Chart(tempBarChartCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Temperature', 'Feels Like'],
+                datasets: [{
+                    label: 'Values (°C)',
+                    data: [0, 0],
+                    backgroundColor: ['rgba(255, 99, 132, 0.6)', 'rgba(54, 162, 235, 0.6)'],
+                    borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        async function fetchCityData(city) {
+            try {
+                const weatherResponse = await fetch(`/api/weather?city=${city}`);
+                const weatherData = await weatherResponse.json();
+
+                if (weatherResponse.ok) {
+                    weatherInfo.innerHTML = ` 
+                        <p>Temperature: ${weatherData.main.temp} °C</p>
+                        <p>Feels Like: ${weatherData.main.feels_like} °C</p>
+                        <p>Humidity: ${weatherData.main.humidity}%</p>
+                        <p>Condition: ${weatherData.weather[0].description}</p>
+                        <p>Wind Speed: ${weatherData.wind.speed} m/s</p>
+                        <p>Visibility: ${weatherData.visibility / 1000} km</p>
+                        <p>Sunrise: ${new Date(weatherData.sys.sunrise * 1000).toLocaleTimeString()}</p>
+                        <p>Sunset: ${new Date(weatherData.sys.sunset * 1000).toLocaleTimeString()}</p>
+                    `;
+
+                    tempBarChart.data.datasets[0].data = [
+                        weatherData.main.temp,
+                        weatherData.main.feels_like
+                    ];
+                    tempBarChart.update();
+                } else {
+                    weatherInfo.innerHTML = `<p>${weatherData.error}</p>`;
+                }
+
+                const aqiResponse = await fetch(`/api/aqi?city=${city}`);
+                const aqiData = await aqiResponse.json();
+
+                if (aqiResponse.ok) {
+                    aqiInfo.innerHTML = `<p>AQI: ${aqiData.aqi}</p>`;
+
+                    aqiChart.data.labels = ['Morning', 'Afternoon', 'Evening', 'Night'];
+                    aqiChart.data.datasets[0].data = [50, 75, 60, 80];
+                    aqiChart.update();
+                } else {
+                    aqiInfo.innerHTML = `<p>${aqiData.error}</p>`;
+                }
+
+                const newsResponse = await fetch(`/api/news?city=${city}`);
+                const newsData = await newsResponse.json();
+
+                if (newsResponse.ok) {
+                    newsInfo.innerHTML = newsData.articles.map(article => `
+                        <p><a href="${article.link}" target="_blank">${article.title}</a></p>
+                    `).join('');
+                } else {
+                    newsInfo.innerHTML = `<p>${newsData.error}</p>`;
+                }
+
+            } catch (error) {
+                weatherInfo.innerHTML = `<p>Error fetching data for ${city}. Please try again.</p>`;
+                aqiInfo.innerHTML = `<p>Error fetching data for ${city}. Please try again.</p>`;
+                newsInfo.innerHTML = `<p>Error fetching news for ${city}. Please try again.</p>`;
+            }
+        }
+
+        searchBtn.addEventListener("click", () => {
+            const city = cityInput.value.trim();
+            if (city) {
+                fetchCityData(city);
+            }
+        });
+
+    </script>
+</body>
+</html>

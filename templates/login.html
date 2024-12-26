@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .form-container {
+            background: #ffffff;
+            padding: 30px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            width: 350px;
+            text-align: center;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        h2 {
+            color: #4a4a4a;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        label {
+            display: block;
+            text-align: left;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #6e6e6e;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+        input:focus {
+            border-color: #6e8efb;
+            box-shadow: 0 0 5px rgba(110, 142, 251, 0.5);
+            outline: none;
+        }
+        input.error {
+            border-color: #ff4d4d;
+        }
+        .error-message {
+            color: #ff4d4d;
+            font-size: 0.9em;
+            text-align: left;
+            margin-top: -8px;
+            margin-bottom: 8px;
+        }
+        button {
+            background: linear-gradient(90deg, #6e8efb, #a777e3);
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            width: 100%;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background: linear-gradient(90deg, #a777e3, #6e8efb);
+            transform: scale(1.03);
+            box-shadow: 0 5px 15px rgba(110, 142, 251, 0.4);
+        }
+        p {
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+        a {
+            color: #6e8efb;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.querySelector("form");
+            const inputs = form.querySelectorAll("input");
+            const errorMessages = {};
+
+            form.addEventListener("submit", (event) => {
+                let isValid = true;
+
+                inputs.forEach((input) => {
+                    if (!input.value.trim()) {
+                        input.classList.add("error");
+                        errorMessages[input.name] = "";
+                        isValid = false;
+                    } else {
+                        input.classList.remove("error");
+                        errorMessages[input.name] = "";
+                    }
+                });
+
+                if (!isValid) {
+                    event.preventDefault();
+                    updateErrorMessages();
+                }
+            });
+
+            inputs.forEach((input) => {
+                input.addEventListener("input", () => {
+                    if (input.value.trim()) {
+                        input.classList.remove("error");
+                        errorMessages[input.name] = "";
+                        updateErrorMessages();
+                    }
+                });
+            });
+
+            function updateErrorMessages() {
+                inputs.forEach((input) => {
+                    const errorMessageElement = document.getElementById(input.name + "-error");
+                    if (errorMessageElement) {
+                        errorMessageElement.textContent = errorMessages[input.name] || "";
+                    }
+                });
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Login</h2>
+        {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            <div class="error-message">
+                {% for category, message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% endwith %}
+        <form method="POST" action="/login">
+            <label for="email">EMAIL</label>
+            <input type="email" id="email" name="email" value="{{ email|default('') }}">
+            <span id="email-error" class="error-message"></span>
+            <label for="password">PASSWORD</label>
+            <input type="password" id="password" name="password">
+            <span id="password-error" class="error-message"></span>
+            <button type="submit">LOGIN</button>
+            <p>Need an account? <a href="{{ url_for('register') }}">Register</a></p>
+        </form>
+    </div>
+</body>
+</html>
