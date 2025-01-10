@@ -6,122 +6,89 @@
     <title>Register</title>
     <style>
         body {
-            font-family: 'Poppins', Arial, sans-serif;
-            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            height: 100vh; 
+            background-image: url('https://images.unsplash.com/photo-1630260643564-7f9c9c140682?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); 
         }
         .form-container {
-            background: #ffffff;
+            background: #fff;
             padding: 30px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-            border-radius: 15px;
-            width: 350px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            width: 300px;
             text-align: center;
-            animation: fadeIn 0.6s ease-in-out;
-        }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
         h1 {
-            color: #4a4a4a;
+            color: #333;
             margin-bottom: 20px;
-            font-size: 2em;
         }
         label {
             display: block;
             text-align: left;
             margin-bottom: 8px;
-            font-weight: 600;
-            color: #6e6e6e;
         }
         input {
             width: 100%;
-            padding: 12px;
-            margin: 10px 0;
+            padding: 10px;
+            margin: 8px 0;
             border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 1em;
-            transition: all 0.3s ease;
-        }
-        input:focus {
-            border-color: #75e1ff;
-            box-shadow: 0 0 5px rgba(19, 0, 4, 0.5);
-            outline: none;
-        }
-        input.error {
-            border-color: #4de7ff;
-        }
-        .error-message {
-            color: #4dffff;
-            font-size: 0.9em;
-            text-align: left;
-            margin-top: -8px;
-            margin-bottom: 8px;
+            border-radius: 5px;
         }
         button {
-            background: linear-gradient(90deg, #ff758c, #fad0c4);
+            background-color: #0073e6;
             color: white;
-            padding: 12px 20px;
+            padding: 10px 20px;
             border: none;
-            border-radius: 8px;
+            border-radius: 5px;
             width: 100%;
             cursor: pointer;
-            font-size: 1.1em;
-            font-weight: bold;
-            transition: all 0.3s ease;
+            transition: background-color 0.3s;
         }
         button:hover {
-            background: linear-gradient(90deg, #fad0c4, #ff758c);
-            transform: scale(1.03);
-            box-shadow: 0 5px 15px rgba(255, 117, 140, 0.4);
+            background-color: #005bb5;
         }
         p {
             margin-top: 15px;
-            font-size: 0.9em;
         }
         a {
-            color: #ff758c;
+            color: #0073e6;
             text-decoration: none;
-            font-weight: bold;
         }
         a:hover {
             text-decoration: underline;
         }
     </style>
-    
 </head>
 <body>
     <div class="form-container">
         <h1>Register</h1>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
         <form method="POST">
             <label><b>NAME</b></label>
-            <input type="text" name="name" required>
-            <span id="name-error" class="error-message"></span>
+            <input type="text" name="name" required><br>
             <label><b>EMAIL</b></label>
-            <input type="email" name="email" required>
-            <span id="email-error" class="error-message"></span>
+            <input type="email" name="email" required><br>
             <label><b>PASSWORD</b></label>
-            <input type="password" name="password" required>
-            <span id="password-error" class="error-message"></span>
+            <input type="password" name="password" required><br>
             <label><b>CONFIRM PASSWORD</b></label>
-            <input type="password" name="confirmpassword" required>
-            <span id="confirmpassword-error" class="error-message"></span>
+            <input type="password" name="confirmpassword" required><br>
             <label><b>CITY</b></label>
-            <input type="text" name="city">
-            <span id="city-error" class="error-message"></span>
-            <button type="submit">REGISTER</button>
+            <input type="text" name="city"><br>
+            <button type="submit">REGISTER</button><br>
             <p>Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
         </form>
     </div>
