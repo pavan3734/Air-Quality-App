@@ -3,4 +3,3 @@ Gunicorn
 requests
 datetime
 pandas
-matplotlib.pyplot
