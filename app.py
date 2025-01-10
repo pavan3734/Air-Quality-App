@@ -4,8 +4,6 @@ from flask_sqlalchemy import SQLAlchemy
 import datetime
 import pandas as pd
 from matplotlib.figure import Figure
-import io
-import base64 
 from urllib.parse import quote
 
 import matplotlib.pyplot as plt
