@@ -473,7 +473,3 @@ def delete_carbon_footprint(footprint_id):
     flash("Carbon footprint data deleted successfully!")
     return redirect(url_for('admin_dashboard'))
 
-if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-    app.run(debug=True)
