@@ -3,6 +3,4 @@ Gunicorn
 requests
 datetime
 pandas
-io
-base64
 matplotlib.pyplot
