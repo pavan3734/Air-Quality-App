@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 import datetime
 import pandas as pd
 import io
+import base64
 from matplotlib.figure import Figure
 from urllib.parse import quote
 
@@ -310,9 +311,9 @@ def login():
             session['username'] = user.name
             session['is_admin'] = (user.email == "pintu@gmail.com")
             if session['is_admin']:
-                flash("Admin login successful!")
+                flash("Welcome !!!!")
                 return redirect(url_for('admin_dashboard'))
-            flash("Login successful! Welcome.")
+            flash("Welcome !!!!")
             return redirect(url_for('home'))
         flash("Invalid email or password.")
         return redirect(url_for('login'))
