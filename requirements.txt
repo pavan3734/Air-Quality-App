@@ -1,5 +1,6 @@
 Flask
 Gunicorn
 requests
+flask_sqlalchemy
 datetime
 pandas
