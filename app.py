@@ -3,6 +3,7 @@ import requests
 from flask_sqlalchemy import SQLAlchemy
 import datetime
 import pandas as pd
+import io
 from matplotlib.figure import Figure
 from urllib.parse import quote
 
