@@ -3,5 +3,6 @@ Gunicorn
 requests
 flask_sqlalchemy
 matplotlib
+flask-wtf
 datetime
 pandas
