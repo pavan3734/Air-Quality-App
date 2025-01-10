@@ -4,5 +4,6 @@ requests
 flask_sqlalchemy
 matplotlib
 flask-wtf
+flask_admin
 datetime
 pandas
